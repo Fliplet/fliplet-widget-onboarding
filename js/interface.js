@@ -1,28 +1,29 @@
 // VARS
 var widgetId = Fliplet.Widget.getDefaultId();
 var data = Fliplet.Widget.getData() || {
-    items: []
-  },
-  linkPromises = [],
-  imageProvider,
-  fullImageProvider;
+  items: []
+};
+var linkPromises = [];
+var imageProvider;
+var fullImageProvider;
+
+var page = Fliplet.Widget.getPage();
+var omitPages = page ? [page.id] : [];
 
 // DEFAULTS
 data.items = data.items || [];
 
 var FlSlider = (function() {
-
   var accordionCollapsed = false;
-
   var $accordionContainer = $('#accordion');
 
-
   function makeid(length) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < length; i++)
+    for (var i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return text;
   }
@@ -60,8 +61,8 @@ var FlSlider = (function() {
     constructor: FlSlider,
     setupSortable: function() {
       var $sortable = $('.panel-group').sortable({
-        handle: ".panel-heading",
-        cancel: ".icon-delete",
+        handle: '.panel-heading',
+        cancel: '.icon-delete',
         tolerance: 'pointer',
         revert: 150,
         placeholder: 'panel panel-default placeholder tile',
@@ -75,7 +76,7 @@ var FlSlider = (function() {
         stop: function(event, ui) {
           ui.item.removeClass('focus');
 
-          var sortedIds = $(".panel-group").sortable("toArray", {
+          var sortedIds = $('.panel-group').sortable('toArray', {
             attribute: 'data-id'
           });
           data.items = _.sortBy(data.items, function(item) {
@@ -84,7 +85,7 @@ var FlSlider = (function() {
           save();
           $('.panel').not(ui.item).removeClass('faded');
         },
-        sort: function(event, ui) {
+        sort: function() {
           $('.panel-group').sortable('refresh');
           $('.tab-content').trigger('scroll');
         }
@@ -93,66 +94,66 @@ var FlSlider = (function() {
     },
 
     loadAnimationToggle: function() {
-      if (typeof data.animationEnabled != "undefined") {
+      if (typeof data.animationEnabled !== 'undefined') {
         if (data.animationEnabled) {
-          $('#enable-animation-yes').prop("checked", true);
+          $('#enable-animation-yes').prop('checked', true);
         } else {
-          $('#enable-animation-no').prop("checked", true);
+          $('#enable-animation-no').prop('checked', true);
         }
       } else {
-        $('#enable-animation-yes').prop("checked", true);
+        $('#enable-animation-yes').prop('checked', true);
       }
       _this.enableAnimation();
     },
 
     loadNavigationToggle: function() {
-      if (typeof data.navigationEnabled != "undefined") {
+      if (typeof data.navigationEnabled !== 'undefined') {
         if (data.navigationEnabled) {
-          $('#enable-navigation-yes').prop("checked", true);
+          $('#enable-navigation-yes').prop('checked', true);
         } else {
-          $('#enable-navigation-no').prop("checked", true);
+          $('#enable-navigation-no').prop('checked', true);
         }
       } else {
-        $('#enable-navigation-no').prop("checked", true);
+        $('#enable-navigation-no').prop('checked', true);
       }
       _this.enableNavigation();
     },
 
     loadSkipToggle: function() {
-      if (typeof data.skipEnabled != "undefined") {
+      if (typeof data.skipEnabled !== 'undefined') {
         if (data.skipEnabled) {
-          $('#enable-skip-yes').prop("checked", true);
+          $('#enable-skip-yes').prop('checked', true);
         } else {
-          $('#enable-skip-no').prop("checked", true);
+          $('#enable-skip-no').prop('checked', true);
         }
       } else {
-        $('#enable-skip-no').prop("checked", true);
+        $('#enable-skip-no').prop('checked', true);
       }
       _this.enableSkipButton();
     },
 
     loadSeenToggle: function() {
-      if (typeof data.skipSeenEnabled != "undefined") {
+      if (typeof data.skipSeenEnabled !== 'undefined') {
         if (data.skipSeenEnabled) {
-          $('#enable-skip-seen-yes').prop("checked", true);
+          $('#enable-skip-seen-yes').prop('checked', true);
         } else {
-          $('#enable-skip-seen-no').prop("checked", true);
+          $('#enable-skip-seen-no').prop('checked', true);
         }
       } else {
-        $('#enable-skip-seen-no').prop("checked", true);
+        $('#enable-skip-seen-no').prop('checked', true);
       }
       _this.enableSkipSeenButton();
     },
 
     loadDelayToggle: function() {
-      if (typeof data.enableDelay != "undefined") {
+      if (typeof data.enableDelay !== 'undefined') {
         if (data.enableDelay) {
-          $('#enable-delay-yes').prop("checked", true);
+          $('#enable-delay-yes').prop('checked', true);
         } else {
-          $('#enable-delay-no').prop("checked", true);
+          $('#enable-delay-no').prop('checked', true);
         }
       } else {
-        $('#enable-delay-no').prop("checked", true);
+        $('#enable-delay-no').prop('checked', true);
       }
       _this.enableDelayButton();
     },
@@ -164,7 +165,7 @@ var FlSlider = (function() {
     },
 
     loadFullscreenImage: function() {
-      if (typeof data.fullImageConfig != "undefined" || data.fullImageConfig != null) {
+      if (data.fullImageConfig) {
         $('.background-image .set-bg-image').text('Replace image');
         $('.background-image .thumb-holder').removeClass('hidden');
         $('.background-image .thumb-image img').attr('src', data.fullImageConfig.url);
@@ -220,9 +221,9 @@ var FlSlider = (function() {
     },
 
     initItemLinkProvider: function(item) {
-
       item.linkAction = item.linkAction || {};
       item.linkAction.provId = item.id;
+      item.linkAction.omitPages = omitPages;
 
       var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
@@ -257,7 +258,8 @@ var FlSlider = (function() {
 
       data.skipLinkAction = $.extend(true, {
         action: 'screen',
-        page: '',
+        page: 'none',
+        omitPages: omitPages,
         transition: 'fade',
         options: {
           hideAction: true
@@ -297,7 +299,8 @@ var FlSlider = (function() {
 
       data.seenLinkAction = $.extend(true, {
         action: 'screen',
-        page: '',
+        page: 'none',
+        omitPages: omitPages,
         transition: 'fade',
         options: {
           hideAction: true
@@ -321,6 +324,13 @@ var FlSlider = (function() {
       });
 
       skipSeenLinkActionProvider.then(function(result) {
+        if (data.skipSeenEnabled && (!result.data.page || result.data.page === 'none')) {
+          Fliplet.Modal.alert({
+            message: 'Please configure a screen to redirect to.'
+          });
+          return Promise.reject();
+        }
+
         data.seenLinkAction = result && result.data.action !== 'none' ? result.data : null;
         return Promise.resolve();
       });
@@ -330,10 +340,17 @@ var FlSlider = (function() {
     },
 
     initImageProvider: function(item) {
-      imageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
+      var filePickerData = {
+        selectFiles: item.imageConf ? [item.imageConf] : [],
+        selectMultiple: false,
+        type: 'image',
+        autoSelectOnUpload: true
+      };
+
+      imageProvider = Fliplet.Widget.open('com.fliplet.file-picker', {
         // Also send the data I have locally, so that
         // the interface gets repopulated with the same stuff
-        data: item.imageConf,
+        data: filePickerData,
         // Events fired from the provider
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
@@ -347,13 +364,17 @@ var FlSlider = (function() {
       Fliplet.Widget.toggleCancelButton(false);
 
       window.addEventListener('message', function(event) {
-        if (event.data === 'cancel-button-pressed') {
+        if (event.data === 'cancel-button-pressed' && imageProvider) {
           Fliplet.Widget.toggleCancelButton(true);
           imageProvider.close();
+
           if (_.isEmpty(item.imageConf)) {
             $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
             $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
+
+          Fliplet.Widget.resetSaveButtonLabel();
+          imageProvider = null;
         }
       });
 
@@ -363,8 +384,8 @@ var FlSlider = (function() {
 
       imageProvider.then(function(data) {
         if (data.data) {
-          item.imageConf = data.data;
-          $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data.thumbnail);
+          item.imageConf = data.data[0];
+          $('[data-id="' + item.id + '"] .thumb-image img').attr('src', data.data[0].thumbnail);
           save();
         }
         imageProvider = null;
@@ -374,10 +395,17 @@ var FlSlider = (function() {
     },
 
     initImageBgProvider: function() {
-      fullImageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
+      var filePickerData = {
+        selectFiles: data.fullImageConfig ? [data.fullImageConfig] : [],
+        selectMultiple: false,
+        type: 'image',
+        autoSelectOnUpload: true
+      };
+
+      fullImageProvider = Fliplet.Widget.open('com.fliplet.file-picker', {
         // Also send the data I have locally, so that
         // the interface gets repopulated with the same stuff
-        data: data.fullImageConfig,
+        data: filePickerData,
         // Events fired from the provider
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
@@ -394,10 +422,14 @@ var FlSlider = (function() {
         if (event.data === 'cancel-button-pressed') {
           Fliplet.Widget.toggleCancelButton(true);
           fullImageProvider.close();
-          if (_.isEmpty(item.fullImageConfig)) {
+
+          if (_.isEmpty(data.fullImageConfig)) {
             $('.background-image .add-image-holder').find('.set-bg-image').text('Add image');
             $('.background-image .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
+
+          Fliplet.Widget.resetSaveButtonLabel();
+          fullImageProvider = null;
         }
       });
 
@@ -406,9 +438,10 @@ var FlSlider = (function() {
       });
 
       fullImageProvider.then(function(results) {
-        if (results.data) {
-          data.fullImageConfig = results.data;
-          $('.background-image .thumb-image img').attr("src", results.data.thumbnail);
+        var resData = results.data[0];
+        if (resData) {
+          data.fullImageConfig = resData;
+          $('.background-image .thumb-image img').attr('src', resData.thumbnail);
           save();
         }
         fullImageProvider = null;
@@ -435,6 +468,7 @@ var FlSlider = (function() {
       var $newPanel = $(Handlebars.panelTemplate(data));
       $accordionContainer.append($newPanel);
 
+      $newPanel.find('.form-control.list-item-desc').attr('placeholder', 'Enter description');
       $newPanel.find('.form-control:eq(0)').select();
       $('form.form-horizontal').stop().animate({
         scrollTop: $('.tab-content').height()
@@ -444,7 +478,7 @@ var FlSlider = (function() {
     },
 
     checkPanelLength: function() {
-      if ($('.panel').length) {
+      if (data.items.length) {
         $('#slides').removeClass('list-items-empty');
       } else {
         $('#slides').addClass('list-items-empty');
@@ -454,9 +488,8 @@ var FlSlider = (function() {
     attachObservers: function() {
       _this.$tabcontent
         .on('click', '.icon-delete', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id');
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
 
           _.remove(data.items, {
             id: id
@@ -469,15 +502,13 @@ var FlSlider = (function() {
           _this.checkPanelLength();
           _this.listLength--;
           save();
-
         })
         .on('click', '.add-image', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id'),
-            item = _.find(data.items, {
-              id: id
-            });
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
+          var item = _.find(data.items, {
+            id: id
+          });
 
           _this.initImageProvider(item);
 
@@ -487,12 +518,11 @@ var FlSlider = (function() {
           }
         })
         .on('click', '.image-remove', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id'),
-            item = _.find(data.items, {
-              id: id
-            });
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
+          var item = _.find(data.items, {
+            id: id
+          });
 
           item.imageConf = null;
           $(this).parents('.add-image-holder').find('.add-image').text('Add image');
@@ -540,12 +570,11 @@ var FlSlider = (function() {
           }
         })
         .on('click', '.new-list-item', function() {
-
           var item = {};
           item.id = makeid(8);
           item.number = _this.listLength++;
           item.linkAction = null;
-          item.description = "";
+          item.description = '';
           data.items.push(item);
 
           _this.addListItem(item);
@@ -553,7 +582,6 @@ var FlSlider = (function() {
 
           _this.checkPanelLength();
           save();
-
         })
         .on('show.bs.collapse', '.panel-collapse', function() {
           // Get item ID / Get provider / Get item
@@ -592,14 +620,10 @@ var FlSlider = (function() {
           _this.enableSkipSeenButton();
         });
 
-      $('#help_tip').on('click', function() {
-        alert("During beta, please use live chat and let us know what you need help with.");
-      });
-
       var contentHeight = $('body > .form-horizontal').outerHeight();
       var tabPaneTopPadding = 78;
 
-      $('body > .form-horizontal').scroll(function(event) {
+      $('body > .form-horizontal').scroll(function() {
         var tabContentScrollPos = Math.abs($('.tab-pane-content').position().top - tabPaneTopPadding);
         var tabPaneHeight = tabPaneTopPadding + $('.tab-pane-content').height();
 
