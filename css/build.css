@@ -20,6 +20,7 @@ html.web[data-has-notch] body,
 
 .supports-container .fl-widget-instance[data-name="Onboarding Slides"] {
 	height: 100vh;
+	height: calc(100vh - env(safe-area-inset-top));
 }
 
 /* ONBOARDING */
