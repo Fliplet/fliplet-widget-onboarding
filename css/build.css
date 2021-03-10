@@ -14,6 +14,10 @@ html.web[data-has-notch] body,
 
 /* Screen Defaults */
 
+html.notch body {
+  padding-bottom: 0;
+}
+
 .mode-interact .fl-widget-instance[data-name="Onboarding Slides"] {
   position: static;
 }
