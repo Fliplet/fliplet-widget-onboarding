@@ -199,6 +199,15 @@ html.web[data-has-notch] .ob-bottom-nav {
   margin-right: 0;
 }
 
+[dir="rtl"] .swiper-pagination-bullet {
+  margin-right: 0;
+  margin-left: 5px;
+}
+
+[dir="rtl"] .swiper-pagination-bullet:last-child {
+  margin-left: 0;
+}
+
 .swiper-pagination-bullet-active {
   opacity: 1;
   background: #337ab7;
@@ -246,6 +255,34 @@ html.web[data-has-notch] .onboarding-content .swiper-button-prev {
 .onboarding-content .swiper-button-next .fa {
   margin-right: -3px;
   font-size: 32px;
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-prev {
+  left: auto;
+  right: 15px;
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-next {
+  right: auto;
+  left: 15px;
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-prev .fa {
+  margin-left: 0;
+  margin-right: -3px;
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-next .fa {
+  margin-right: 0;
+  margin-left: -3px;
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-prev .fa:before {
+  content: "\f105";
+}
+
+[dir="rtl"] .onboarding-content .swiper-button-next .fa:before {
+  content: "\f104";
 }
 
 .onboarding-content .swiper-button-next,
