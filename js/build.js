@@ -80,6 +80,7 @@ Fliplet.Widget.instance('onboarding', function(data) {
 
     $container.find('.btn[data-slide-button-id]').click(function(event) {
       event.preventDefault();
+
       var itemData = _.find(data.items, { id: $(this).data('slide-button-id') });
 
       Fliplet.Analytics.trackEvent({

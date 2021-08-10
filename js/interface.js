@@ -60,7 +60,7 @@ var FlSlider = (function() {
     // Public functions
     constructor: FlSlider,
     setupSortable: function() {
-      var $sortable = $('.panel-group').sortable({
+      $('.panel-group').sortable({
         handle: '.panel-heading',
         cancel: '.icon-delete',
         tolerance: 'pointer',
@@ -79,6 +79,7 @@ var FlSlider = (function() {
           var sortedIds = $('.panel-group').sortable('toArray', {
             attribute: 'data-id'
           });
+
           data.items = _.sortBy(data.items, function(item) {
             return sortedIds.indexOf(item.id);
           });
@@ -90,6 +91,7 @@ var FlSlider = (function() {
           $('.tab-content').trigger('scroll');
         }
       });
+
       $('form.form-horizontal').trigger('scroll');
     },
 
@@ -103,6 +105,7 @@ var FlSlider = (function() {
       } else {
         $('#enable-animation-yes').prop('checked', true);
       }
+
       _this.enableAnimation();
     },
 
@@ -116,6 +119,7 @@ var FlSlider = (function() {
       } else {
         $('#enable-navigation-no').prop('checked', true);
       }
+
       _this.enableNavigation();
     },
 
@@ -129,6 +133,7 @@ var FlSlider = (function() {
       } else {
         $('#enable-skip-no').prop('checked', true);
       }
+
       _this.enableSkipButton();
     },
 
@@ -142,6 +147,7 @@ var FlSlider = (function() {
       } else {
         $('#enable-skip-seen-no').prop('checked', true);
       }
+
       _this.enableSkipSeenButton();
     },
 
@@ -155,6 +161,7 @@ var FlSlider = (function() {
       } else {
         $('#enable-delay-no').prop('checked', true);
       }
+
       _this.enableDelayButton();
     },
 
@@ -243,6 +250,7 @@ var FlSlider = (function() {
 
       linkActionProvider.then(function(data) {
         item.linkAction = data && data.data.action !== 'none' ? data.data : null;
+
         return Promise.resolve();
       });
 
@@ -252,6 +260,7 @@ var FlSlider = (function() {
 
     initSkipLinkProvider: function() {
       var providerSelector = '.add-skip-link';
+
       if (!$(providerSelector).is(':empty')) {
         return;
       }
@@ -284,6 +293,7 @@ var FlSlider = (function() {
 
       skipLinkActionProvider.then(function(result) {
         data.skipLinkAction = result && result.data.action !== 'none' ? result.data : null;
+
         return Promise.resolve();
       });
 
@@ -293,6 +303,7 @@ var FlSlider = (function() {
 
     initSkipSeenLinkProvider: function() {
       var providerSelector = '.add-seen-skip-link';
+
       if (!$(providerSelector).is(':empty')) {
         return;
       }
@@ -328,10 +339,12 @@ var FlSlider = (function() {
           Fliplet.Modal.alert({
             message: 'Please configure a screen to redirect to.'
           });
+
           return Promise.reject();
         }
 
         data.seenLinkAction = result && result.data.action !== 'none' ? result.data : null;
+
         return Promise.resolve();
       });
 
@@ -388,8 +401,10 @@ var FlSlider = (function() {
           $('[data-id="' + item.id + '"] .thumb-image img').attr('src', data.data[0].thumbnail);
           save();
         }
+
         imageProvider = null;
         Fliplet.Studio.emit('widget-save-label-reset');
+
         return Promise.resolve();
       });
     },
@@ -439,13 +454,16 @@ var FlSlider = (function() {
 
       fullImageProvider.then(function(results) {
         var resData = results.data[0];
+
         if (resData) {
           data.fullImageConfig = resData;
           $('.background-image .thumb-image img').attr('src', resData.thumbnail);
           save();
         }
+
         fullImageProvider = null;
         Fliplet.Studio.emit('widget-save-label-reset');
+
         return Promise.resolve();
       });
     },
@@ -466,6 +484,7 @@ var FlSlider = (function() {
 
     addListItem: function(data) {
       var $newPanel = $(Handlebars.panelTemplate(data));
+
       $accordionContainer.append($newPanel);
 
       $newPanel.find('.form-control.list-item-desc').attr('placeholder', 'Enter description');
@@ -513,6 +532,7 @@ var FlSlider = (function() {
           _this.initImageProvider(item);
 
           $(this).text('Replace image');
+
           if ($(this).siblings('.thumb-holder').hasClass('hidden')) {
             $(this).siblings('.thumb-holder').removeClass('hidden');
           }
@@ -533,6 +553,7 @@ var FlSlider = (function() {
           _this.initImageBgProvider();
 
           $(this).text('Replace image');
+
           if ($(this).siblings('.thumb-holder').hasClass('hidden')) {
             $(this).siblings('.thumb-holder').removeClass('hidden');
           }
@@ -545,6 +566,7 @@ var FlSlider = (function() {
         })
         .on('keyup change blur paste', '.list-item-title', function() {
           var $listItem = $(this).parents('.panel');
+
           _this.setListItemTitle($listItem.index(), $(this).val());
 
           debounceSave();
@@ -556,10 +578,11 @@ var FlSlider = (function() {
         })
         .on('click', '.expand-items', function() {
           var $panelCollapse = $('.panel-collapse.in');
+
           // Update accordionCollapsed if all panels are collapsed/expanded
           if (!$panelCollapse.length) {
             accordionCollapsed = true;
-          } else if ($panelCollapse.length == $('.panel-collapse').length) {
+          } else if ($panelCollapse.length === $('.panel-collapse').length) {
             accordionCollapsed = false;
           }
 
@@ -571,6 +594,7 @@ var FlSlider = (function() {
         })
         .on('click', '.new-list-item', function() {
           var item = {};
+
           item.id = makeid(8);
           item.number = _this.listLength++;
           item.linkAction = null;
@@ -592,10 +616,12 @@ var FlSlider = (function() {
           var item = _.find(data.items, function(item) {
             return item.id === itemID;
           });
+
           // Init the link provider when the accordion opens
           if (!itemProvider && item) {
             _this.initItemLinkProvider(item);
           }
+
           $(this).siblings('.panel-heading').find('.fa-chevron-right').removeClass('fa-chevron-right').addClass('fa-chevron-down');
         })
         .on('hide.bs.collapse', '.panel-collapse', function() {
@@ -640,7 +666,7 @@ var FlSlider = (function() {
   return FlSlider;
 })();
 
-var flSlider = new FlSlider(data);
+new FlSlider(data);
 
 Fliplet.Widget.onSaveRequest(function() {
   if (imageProvider) {
@@ -663,6 +689,7 @@ function save(notifyComplete) {
 
   var delay = $('#delay-seconds').val();
   var parsedDelay = delay.length ? parseInt(delay, 10) : undefined;
+
   data.delaySlides = parsedDelay;
 
   if (notifyComplete) {
