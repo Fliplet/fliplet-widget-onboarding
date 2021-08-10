@@ -80,6 +80,7 @@ Fliplet.Widget.instance('onboarding', function(data) {
 
     $container.find('.btn[data-slide-button-id]').click(function(event) {
       event.preventDefault();
+
       var itemData = _.find(data.items, { id: $(this).data('slide-button-id') });
 
       Fliplet.Analytics.trackEvent({
@@ -104,29 +105,31 @@ Fliplet.Widget.instance('onboarding', function(data) {
     });
   }
 
-  // Initialization
-  if (data.skipSeenEnabled && data.seenLinkAction && !_.isEmpty(data.seenLinkAction)) {
-    Fliplet.App.Storage.get(pvKey).then(function(value) {
-      if (value && value.seen && !Fliplet.Env.get('interact')) {
-        setTimeout(function() {
-          Fliplet.Navigate.to(data.seenLinkAction).catch(function() {
-            initOnboarding();
-          });
-        }, 800);
-        return;
-      }
-
-      if (data.enableDelay && !Fliplet.Env.get('interact')) {
-        setTimeout(initOnboarding, delayTime);
-      } else {
-        initOnboarding();
-      }
-    });
-  } else {
+  function init() {
     if (data.enableDelay && !Fliplet.Env.get('interact')) {
       setTimeout(initOnboarding, delayTime);
     } else {
       initOnboarding();
     }
+  }
+
+  // Initialization
+  if (data.skipSeenEnabled && data.seenLinkAction && !_.isEmpty(data.seenLinkAction)) {
+    Fliplet.App.Storage.get(pvKey).then(function(value) {
+      if (value && value.seen && !Fliplet.Env.get('interact')) {
+        Fliplet.Navigate.to(data.seenLinkAction).catch(function() {
+          // Allow a delay for the navigation to be carried out, in case it's a false error
+          setTimeout(function() {
+            init();
+          }, 100);
+        });
+
+        return;
+      }
+
+      init();
+    });
+  } else {
+    init();
   }
 });
