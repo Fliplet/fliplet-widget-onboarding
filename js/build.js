@@ -117,6 +117,8 @@ Fliplet.Widget.instance('onboarding', function(data) {
   if (data.skipSeenEnabled && data.seenLinkAction && !_.isEmpty(data.seenLinkAction)) {
     Fliplet.App.Storage.get(pvKey).then(function(value) {
       if (value && value.seen && !Fliplet.Env.get('interact')) {
+        data.seenLinkAction.addToHistory = false;
+
         Fliplet.Navigate.to(data.seenLinkAction).catch(function() {
           // Allow a delay for the navigation to be carried out, in case it's a false error
           setTimeout(function() {
