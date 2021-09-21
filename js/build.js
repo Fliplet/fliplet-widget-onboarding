@@ -117,12 +117,16 @@ Fliplet.Widget.instance('onboarding', function(data) {
   if (data.skipSeenEnabled && data.seenLinkAction && !_.isEmpty(data.seenLinkAction)) {
     Fliplet.App.Storage.get(pvKey).then(function(value) {
       if (value && value.seen && !Fliplet.Env.get('interact')) {
-        Fliplet.Navigate.to(data.seenLinkAction).catch(function() {
-          // Allow a delay for the navigation to be carried out, in case it's a false error
-          setTimeout(function() {
-            init();
-          }, 100);
-        });
+        // If the delay is too long (600ms), the "Tap and hold to exit" alert may appear twice
+        // If the delay is too short (400ms), navigation crashes due to navstack race conditions
+        setTimeout(function() {
+          Fliplet.Navigate.to(data.seenLinkAction).catch(function() {
+            // Allow a delay for the navigation to be carried out, in case it's a false error
+            setTimeout(function() {
+              init();
+            }, 100);
+          });
+        }, 500);
 
         return;
       }
