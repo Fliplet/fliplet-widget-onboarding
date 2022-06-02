@@ -4,8 +4,6 @@ Fliplet.Widget.instance('onboarding', function(data) {
   var pvKey = 'fl-onboarding-layout-' + data.uuid;
   var delayTime = data.delaySlides ? data.delaySlides * 1000 : 3000;
 
-  $container.translate();
-
   function authenticateImages(onImageLoad) {
     return Fliplet().then(function() {
       if (_.get(data, 'fullImageConfig.url')
@@ -138,4 +136,8 @@ Fliplet.Widget.instance('onboarding', function(data) {
   } else {
     init();
   }
+
+  Fliplet().then(function() {
+    $container.translate();
+  });
 });
