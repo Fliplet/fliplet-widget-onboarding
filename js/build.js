@@ -136,4 +136,8 @@ Fliplet.Widget.instance('onboarding', function(data) {
   } else {
     init();
   }
+
+  Fliplet().then(function() {
+    $container.translate();
+  });
 });
