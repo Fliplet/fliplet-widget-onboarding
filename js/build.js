@@ -6,15 +6,15 @@ Fliplet.Widget.instance('onboarding', function(data) {
 
   function authenticateImages(onImageLoad) {
     return Fliplet().then(function() {
-      if (_.get(data, 'fullImageConfig.url')
+      if (Fliplet.Utils.get(data, 'fullImageConfig.url')
         && Fliplet.Media.isRemoteUrl(data.fullImageConfig.url)) {
         $container.css({
           backgroundImage: 'url(' + Fliplet.Media.authenticate(data.fullImageConfig.url) + ')'
         });
       }
 
-      _.forEach(data.items, function(item) {
-        if (!_.get(item, 'imageConf.url') || !Fliplet.Media.isRemoteUrl(item.imageConf.url)) {
+      Fliplet.Utils.forEach(data.items, function(item) {
+        if (!Fliplet.Utils.get(item, 'imageConf.url') || !Fliplet.Media.isRemoteUrl(item.imageConf.url)) {
           return;
         }
 
@@ -67,13 +67,13 @@ Fliplet.Widget.instance('onboarding', function(data) {
         return Fliplet.App.Storage.set(pvKey, {
           seen: true
         }).then(function() {
-          if (_.get(data, 'skipLinkAction') && !_.isEmpty(data.skipLinkAction)) {
+          if (Fliplet.Utils.get(data, 'skipLinkAction') && !Fliplet.Utils.isEmpty(data.skipLinkAction)) {
             Fliplet.Navigate.to(data.skipLinkAction);
           }
         });
       }
 
-      if (_.get(data, 'skipLinkAction') && !_.isEmpty(data.skipLinkAction)) {
+      if (Fliplet.Utils.get(data, 'skipLinkAction') && !Fliplet.Utils.isEmpty(data.skipLinkAction)) {
         Fliplet.Navigate.to(data.skipLinkAction);
       }
     });
@@ -81,7 +81,7 @@ Fliplet.Widget.instance('onboarding', function(data) {
     $container.find('.btn[data-slide-button-id]').click(function(event) {
       event.preventDefault();
 
-      var itemData = _.find(data.items, { id: $(this).data('slide-button-id') });
+      var itemData = Fliplet.Utils.find(data.items, { id: $(this).data('slide-button-id') });
 
       Fliplet.Analytics.trackEvent({
         category: 'onboarding',
@@ -93,13 +93,13 @@ Fliplet.Widget.instance('onboarding', function(data) {
         return Fliplet.App.Storage.set(pvKey, {
           seen: true
         }).then(function() {
-          if (_.get(itemData, 'linkAction') && !_.isEmpty(itemData.linkAction)) {
+          if (Fliplet.Utils.get(itemData, 'linkAction') && !Fliplet.Utils.isEmpty(itemData.linkAction)) {
             Fliplet.Navigate.to(itemData.linkAction);
           }
         });
       }
 
-      if (_.get(itemData, 'linkAction') && !_.isEmpty(itemData.linkAction)) {
+      if (Fliplet.Utils.get(itemData, 'linkAction') && !Fliplet.Utils.isEmpty(itemData.linkAction)) {
         Fliplet.Navigate.to(itemData.linkAction);
       }
     });
@@ -114,7 +114,7 @@ Fliplet.Widget.instance('onboarding', function(data) {
   }
 
   // Initialization
-  if (data.skipSeenEnabled && data.seenLinkAction && !_.isEmpty(data.seenLinkAction)) {
+  if (data.skipSeenEnabled && data.seenLinkAction && !Fliplet.Utils.isEmpty(data.seenLinkAction)) {
     Fliplet.App.Storage.get(pvKey).then(function(value) {
       if (value && value.seen && !Fliplet.Env.get('interact')) {
         // If the delay is too long (600ms), the "Tap and hold to exit" alert may appear twice

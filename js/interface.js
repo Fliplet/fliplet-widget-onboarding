@@ -38,7 +38,7 @@ var FlSlider = (function() {
   function FlSlider(data) {
     _this = this;
 
-    if (_.isObject(data.skipLinkAction)) {
+    if (Fliplet.Utils.isObject(data.skipLinkAction)) {
       this.initSkipLinkProvider();
     }
 
@@ -83,7 +83,7 @@ var FlSlider = (function() {
             attribute: 'data-id'
           });
 
-          data.items = _.sortBy(data.items, function(item) {
+          data.items = Fliplet.Utils.sortBy(data.items, function(item) {
             return sortedIds.indexOf(item.id);
           });
 
@@ -386,7 +386,7 @@ var FlSlider = (function() {
           Fliplet.Widget.toggleCancelButton(true);
           imageProvider.close();
 
-          if (_.isEmpty(item.imageConf)) {
+          if (Fliplet.Utils.isEmpty(item.imageConf)) {
             $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
             $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
@@ -443,7 +443,7 @@ var FlSlider = (function() {
           Fliplet.Widget.toggleCancelButton(true);
           fullImageProvider.close();
 
-          if (_.isEmpty(data.fullImageConfig)) {
+          if (Fliplet.Utils.isEmpty(data.fullImageConfig)) {
             $('.background-image .add-image-holder').find('.set-bg-image').text('Add image');
             $('.background-image .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
@@ -515,10 +515,10 @@ var FlSlider = (function() {
           var $item = $(this).closest('[data-id], .panel');
           var id = $item.data('id');
 
-          _.remove(data.items, {
+          Fliplet.Utils.remove(data.items, {
             id: id
           });
-          _.remove(linkPromises, {
+          Fliplet.Utils.remove(linkPromises, {
             id: id
           });
 
@@ -530,7 +530,7 @@ var FlSlider = (function() {
         .on('click', '.add-image', function() {
           var $item = $(this).closest('[data-id], .panel');
           var id = $item.data('id');
-          var item = _.find(data.items, {
+          var item = Fliplet.Utils.find(data.items, {
             id: id
           });
 
@@ -545,7 +545,7 @@ var FlSlider = (function() {
         .on('click', '.image-remove', function() {
           var $item = $(this).closest('[data-id], .panel');
           var id = $item.data('id');
-          var item = _.find(data.items, {
+          var item = Fliplet.Utils.find(data.items, {
             id: id
           });
 
@@ -620,10 +620,10 @@ var FlSlider = (function() {
         .on('show.bs.collapse', '.panel-collapse', function() {
           // Get item ID / Get provider / Get item
           var itemID = $(this).parents('.panel').data('id');
-          var itemProvider = _.find(linkPromises, function(provider) {
+          var itemProvider = Fliplet.Utils.find(linkPromises, function(provider) {
             return provider.id === itemID;
           });
-          var item = _.find(data.items, function(item) {
+          var item = Fliplet.Utils.find(data.items, function(item) {
             return item.id === itemID;
           });
 
@@ -688,10 +688,10 @@ Fliplet.Widget.onSaveRequest(function() {
   }
 });
 
-var debounceSave = _.debounce(save, 500);
+var debounceSave = Fliplet.Utils.debounce(save, 500);
 
 function save(notifyComplete) {
-  _.forEach(data.items, function(item) {
+  Fliplet.Utils.forEach(data.items, function(item) {
     item.description = $('#list-item-desc-' + item.id).val();
     item.title = $('#list-item-title-' + item.id).val();
     item.linkLabel = $('#list-item-link-label-' + item.id).val();

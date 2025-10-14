@@ -13,6 +13,7 @@
   "interface": {
     "dependencies": [
       "fliplet-core",
+      "fliplet-utils",
       "fliplet-studio-ui",
       "jquery-ui",
       "bootstrap",
@@ -29,6 +30,7 @@
   "build": {
     "dependencies": [
       "fliplet-core",
+      "fliplet-utils",
       "bootstrap-css",
       "font-awesome",
       "lodash"
