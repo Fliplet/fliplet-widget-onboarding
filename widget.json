@@ -13,11 +13,11 @@
   "interface": {
     "dependencies": [
       "fliplet-core",
+      "fliplet-utils",
       "fliplet-studio-ui",
       "jquery-ui",
       "bootstrap",
-      "handlebars",
-      "lodash"
+      "handlebars"
     ],
     "assets": [
       "js/swiper.min.js",
@@ -29,9 +29,9 @@
   "build": {
     "dependencies": [
       "fliplet-core",
+      "fliplet-utils",
       "bootstrap-css",
-      "font-awesome",
-      "lodash"
+      "font-awesome"
     ],
     "assets": [
       "js/swiper.min.js",
